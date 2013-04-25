@@ -12,7 +12,6 @@ import pymongo
 import time
 import heapq
 
-<<<<<<< HEAD
 
 def read():
     
@@ -60,7 +59,6 @@ def read():
                      
            idf_value = idf_dictionary_body[kk]    # We are getting the idf value for that term
            #print idf_value
-=======
 def tag_similarity_calc(query_tag,question_tag):
     
     query_list=re.split('>|<',query_tag)
@@ -87,7 +85,6 @@ def cosine_value(query,question,denom_value):
     for kl in query:
         if kl in question:
            sum_val+=question[kl]*query[kl]
->>>>>>> f16ac25b5e943fbe8185fbb510f55bf8349e3651
         else:
            sum_val+=0
 
@@ -141,10 +138,6 @@ def word_preprocessing(word):
  return re.findall(r"[\w]+", word.lower())
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f16ac25b5e943fbe8185fbb510f55bf8349e3651
 def main():    
     read();
        
