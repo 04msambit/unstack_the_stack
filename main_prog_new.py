@@ -10,6 +10,8 @@ import operator
 import random
 import pymongo
 import time
+import fileinput
+
 
 idf_dictionary_title=collections.defaultdict(float)
 idf_dictionary_body=collections.defaultdict(float)
@@ -23,7 +25,14 @@ tags_d=collections.defaultdict(float)
 #term_dict=collections.defaultdict()
 
 def read():
-    
+
+
+    # Create A List of Stop Words
+    stop_word_list=[]
+    for line in fileinput.input(['stop_words.txt']):
+        value = line.rstrip('\n')
+        stop_word_list.append(value)
+
     questions = [] #we'll use this array to store all the questions we find in mongodb
     questionsd = []
 
@@ -59,16 +68,18 @@ def read():
                 set_list2 = set(wordlist2)
 
 		for word in set_list1:
-		    if idf_dictionary_title.has_key(word):
-		       idf_dictionary_title[word]+=1;
-		    else:
-		       idf_dictionary_title[word]=1;
+                    if word not in stop_word_list:
+		       if idf_dictionary_title.has_key(word):
+		          idf_dictionary_title[word]+=1;
+		       else:
+		          idf_dictionary_title[word]=1;
 
                 for word in set_list2:
-                    if idf_dictionary_body.has_key(word):
-                       idf_dictionary_body[word]+=1;
-                    else:
-                       idf_dictionary_body[word]=1;
+                    if word not in stop_word_list:
+                       if idf_dictionary_body.has_key(word):
+                          idf_dictionary_body[word]+=1;
+                       else:
+                          idf_dictionary_body[word]=1;
 
 
 		# We will create a term frequency dictionary here
@@ -83,16 +94,18 @@ def read():
 
 
 		for wrd in wordlist1:
-		    if  wrd not in d_t:
-			d_t[wrd]=1
-		    else:
-			d_t[wrd]+=1
+                    if wrd not in stop_word_list:
+		        if  wrd not in d_t:
+			    d_t[wrd]=1
+		        else:
+			    d_t[wrd]+=1
 
                 for wrd in wordlist2:
-                    if  wrd not in d_b:
-                        d_b[wrd]=1
-                    else:
-                        d_b[wrd]+=1
+                    if wrd not in stop_word_list:
+                        if  wrd not in d_b:
+                            d_b[wrd]=1
+                        else:
+                            d_b[wrd]+=1
 
  
 		for ky in d_t:
@@ -123,7 +136,7 @@ def read():
     ctr = 0
     for key in d_title:
         
-        ctr+=1
+        
 	for kk in d_title[key]:
             idf_value = idf_dictionary_title[kk]    # We are getting the idf value for that term
             raw_term_frequency = d_title[key][kk]
@@ -137,7 +150,7 @@ def read():
 
         #Inserting into DB
        
-        print ctr 
+        
         db.test_dictionary.insert( { "Id":key ,"Tags": tags_d[key] , "Term_Body" : d_body[key] , "Term_Title" : d_title[key] })
 	
 
