@@ -36,7 +36,7 @@ def read(query_id):
    
     count = 0
     
-    # We will see if the Question Id is present inside the Cluster 
+    # We will see if the Question Id is present inside the Cache 
     
     list_ids = db.result_cache.find({"Id":query_id})
     
