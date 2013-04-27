@@ -36,7 +36,7 @@ def read(query_id):
    
     count = 0
     
-    # We will see if the Question Id is present inside the Cache 
+    # We will see if the Question Id is present inside the Cluster 
     
     list_ids = db.result_cache.find({"Id":query_id})
     
@@ -46,7 +46,7 @@ def read(query_id):
         result_list = each_object_value["Answered_Question_List"]
     
     
-    if(counter_value!=0):    
+    if(counter_value==0):    
 
     	query = db.test_dictionary.find({"Id":query_id}) # We will have to chage it to the List of Ids Based on Set of Clustering Ids 
 
@@ -156,7 +156,7 @@ def read(query_id):
             		print result_obj["Title"] 
             		print'\n'
 
-    		db.result_cache.insert({"Unanswered_Question_Id":query_id , "Answered_Question_List":cache_list})
+        db.result_cache.insert({"Unanswered_Question_Id":query_id , "Answered_Question_List":cache_list})
 
     else:
     
