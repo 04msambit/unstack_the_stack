@@ -6,9 +6,8 @@ import xml.etree.ElementTree as xml
 #parser = xml.XMLParser(0,None,'UT')
 #parser = etree.XMLParser(recover=True)
 
-
 datadict = defaultdict()
-tree = xml.parse('/home/gaurav/670/Split_XML/Posts.xml.002')
+tree = xml.parse('Posts.xml.003')
 root = tree.getroot()
 
 connection = pymongo.Connection("localhost", 27017)
