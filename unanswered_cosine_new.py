@@ -88,8 +88,29 @@ def read(query_id):
 
     # We will write the code to Calculate Cosine Similarity Here
 
+        # Form Merged Dictionary
+        merge_dict={}
+        for kk in query_body:
+            if kk in query_title:
+               if kk not in merge_dict:
+                  merge_dict[kk]= float( 0.5 * query_title[kk] ) * float ( 0.5 * query_body[kk] )
+            else:
+               if kk not in merge_dict:
+                  merge_dict[kk]= float( 1.0 * query_body[kk] )
+   
+        for kk in query_title:
+            if kk not in merge_dict:
+                  merge_dict[kk]= float( 1.0 * query_title[kk] )
+
+        
+        query_lst=re.split('>|<',query_tags)
+        search_list = search(query_id,merge_dict,query_lst)
+
+
     	query_question = db.test_dictionary.find() # We will have to chage it to the List of Ids Based on Set of Clustering Ids
-    	question_count = 0
+    	            
+
+        question_count = 0
     	list_for_heap = []
     	for obj in query_question:
         	question_count +=1
@@ -132,7 +153,9 @@ def read(query_id):
 		  if (aggregate_weight > chk_value):
 		     list_for_heap[-1]={"id":row_id,"weight":aggregate_weight}
       
-    	query = db.collection.find({"Id":query_id})
+    
+
+	query = db.collection.find({"Id":query_id})
        
     	for query_obj in query:
         	print '\nUnanswered Question:'
@@ -169,6 +192,51 @@ def read(query_id):
 
     
     return
+
+def search(id_query,vector,tag_list):
+     
+    sum_value = 0.0
+    map_dict={}
+    result_list=[]
+    dist_list=[]
+    map_dict={}
+    cluster_dict={}
+
+    for key_value in vector:
+        sum_value+= float ( vector[key_value] ) * float( vector[key_value])
+    
+    sum_value = math.sqrt(sum_value);
+
+
+    connection = pymongo.Connection("localhost", 27017)
+
+    db = connection['newdata']
+    clustertable = db['clustertable']
+
+
+    for every_tag in tag_list:
+
+        query = db.clustertable.find({"tag":ever_tag})
+        for query_obj in query:
+            cluster_dict=query_obj["clusterDict"]
+
+        for key in cluster_dict:
+            score_value = cosine_value(vector,cluster_dict[key][1],sum_value)
+            if key not in map_dict:
+               map_dict[key] = score_value
+               
+            dist_list.append(score_value)
+
+        min_score = min(dist_list)
+        
+        for key in map_dict:
+            if ( min_score == map_dict[key] ):
+               required_key= key
+        
+        result_list.append(cluster_dict[key][0])            
+
+    return result_list
+
 
 def tag_similarity_calc(query_tag,question_tag):
     
