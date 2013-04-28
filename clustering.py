@@ -1,5 +1,3 @@
-#!/usr/bin/python -tt
-""
 import sys
 import random
 import glob
@@ -9,9 +7,7 @@ import json
 import math
 import operator
 import string
-import requests
 import random
-import pylab
 import pymongo
 from time import time ,clock
 
@@ -83,6 +79,15 @@ def read():
  	 	print tag+" : "
  		for id in finalClustDict[tag]: 
  			print str(id) +" - "+str(finalClustDict[tag][id][0])
+ 					tagDict[tag][row['Id']]=tempDict.copy()
+
+ 	#	print "###################"		
+ 	#	for t in tagDict:
+ 	#		for docId in tagDict[t]:
+ 	#			print t+":"+docId
+ 		#print len(tempDict)
+ 		
+ 	#create_cluster(1,tagDict["php"],len(tagDict["php"]),"php")
 
 def insert_in_db():
  	global finalClustDict 	

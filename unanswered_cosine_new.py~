@@ -211,8 +211,8 @@ def word_preprocessing(word):
  return re.findall(r"[\w]+", word.lower())
 
 def main(argv):
-    ques_id = sys.argv[0]    
+    ques_id = sys.argv[1]    
     read(ques_id);
        
 if __name__ == '__main__':
-  main(sys.argv[1:])
+  main()
