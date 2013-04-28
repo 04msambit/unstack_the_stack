@@ -18,8 +18,8 @@ def read(query_id):
     questions = [] #we'll use this array to store all the questions we find in mongodb
     questionsd = []
     
-    sum_square_query_body=0
-    sum_square_query_title=0
+    sum_square_query_body=0.0
+    sum_square_query_title=0.0
 
     connection = pymongo.Connection("localhost", 27017)
    
@@ -48,7 +48,7 @@ def read(query_id):
     
     if(counter_value==0):    
 
-    	query = db.test_dictionary.find({"Id":query_id}) # We will have to chage it to the List of Ids Based on Set of Clustering Ids 
+        query = db.test_dictionary.find({"Id":query_id}) # We will have to chage it to the List of Ids Based on Set of Clustering Ids 
 
     	query_body={}
     	query_title={}
@@ -56,13 +56,13 @@ def read(query_id):
     	question_title={}
         query_tags =""
 
-    	for obj in query:
-        	query_body=obj["Term_Body"]
-        	query_title=obj["Term_Title"]
-                query_tags = obj["Tags"]
+    	for test_obj in query:
+            query_body=test_obj["Term_Body"]
+            query_title=test_obj["Term_Title"]
+            query_tags = test_obj["Tags"]
       
     
-
+        
         for kk in query_body:
            if kk in idf_dictionary_body:
                      
@@ -73,7 +73,7 @@ def read(query_id):
            query_body[kk] = query_body[kk] * idf_value
            sum_square_query_body += query_body[kk] * query_body[kk]
     
-    	sum_square_query_body=math.sqrt(sum_square_query_body);    
+    	sum_square_query_body=float(math.sqrt(sum_square_query_body));    
     
     	for kk in query_title:
         	if kk in idf_dictionary_title:
@@ -81,10 +81,11 @@ def read(query_id):
            	   idf_value = idf_dictionary_title[kk]    # We are getting the idf value for that term
                 else:
                    idf_value =0
+                
                 query_title[kk] = query_title[kk] * idf_value
                 sum_square_query_title += query_title[kk] * query_title[kk]
 
-    	sum_square_query_title=math.sqrt(sum_square_query_title);
+    	sum_square_query_title=float(math.sqrt(sum_square_query_title));
 
     # We will write the code to Calculate Cosine Similarity Here
 
@@ -99,11 +100,10 @@ def read(query_id):
         	question_tags = obj["Tags"]
     
     
-		if sum_square_query_title == 0:
-		   print "abcd"
+		'''if sum_square_query_title == 0:
+		   print "abcd" '''
 
 		
-
 		title_cosine_value = cosine_value(query_title,question_title,sum_square_query_title)
 		body_cosine_value = cosine_value(query_body,question_body,sum_square_query_body)
 		tag_value= tag_similarity_calc(query_tags,question_tags)       
@@ -211,7 +211,7 @@ def word_preprocessing(word):
  return re.findall(r"[\w]+", word.lower())
 
 def main(argv):
-    ques_id = sys.argv[0]    
+    ques_id = sys.argv[1]    
     read(ques_id);
        
 if __name__ == '__main__':
