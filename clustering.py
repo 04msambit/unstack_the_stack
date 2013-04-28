@@ -79,7 +79,7 @@ def read():
  	 	print tag+" : "
  		for id in finalClustDict[tag]: 
  			print str(id) +" - "+str(finalClustDict[tag][id][0])
- 					tagDict[tag][row['Id']]=tempDict.copy()
+ 	insert_in_db()
 
  	#	print "###################"		
  	#	for t in tagDict:
@@ -95,6 +95,7 @@ def insert_in_db():
  	db = connection['newdata']
  	clustertable = db['clustertable']
  	for tag in finalClustDict:
+ 		print tag
  		db.clustertable.insert({ "tag":tag ,"clusterDict" : finalClustDict[tag]})
 
 
@@ -130,7 +131,8 @@ def create_cluster(k,tfDict,N,tag):
 
  		oldcluster=clustersDict.copy()
  		for i in range(k):
- 			clustersDict[i]=[]	
+ 			clustersDict[str(i)]=[]	
+
  		for id in tfDict:
  			eucList=[]
  			for i in range(k):
@@ -153,7 +155,7 @@ def create_cluster(k,tfDict,N,tag):
 	#print tag
  	for id in clustersDict:
  		finalClustDict[tag][id]=[clustersDict[id]]
- 		finalClustDict[tag][id].append(centroid_list[id])
+ 		finalClustDict[tag][id].append(centroid_list[int(id)])
  	#rssList.append(calcRSS(clustersDict,centroid_list))
  	#print str(k)+": Purity- "+str(calcPurity(clustersDict))
  	#print str(k)+": RI- "+str(calcRandIndex(clustersDict))
@@ -264,7 +266,7 @@ def min(valList):
  			min=valList[i]
  			index=i
 
- 	return index
+ 	return str(index)
 def calcEuclidean(vec1,vec2):
  	diff=0.0
  	for term in vec1:
