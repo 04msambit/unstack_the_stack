@@ -104,9 +104,9 @@ def read(query_id):
                   merge_dict[kk]= float( 1.0 * query_title[kk] )
 
         
-        query_lst=re.split('>|<',query_tags)
+        query_lst=re.split('>|<',query_tags)	
         search_list = search(query_id,merge_dict,query_lst)
-
+	
 
     	#query_question = db.test_dictionary.find() # We will have to chage it to the List of Ids Based on Set of Clustering Ids
     	            
@@ -218,7 +218,7 @@ def search(id_query,vector,tag_list):
 
     for every_tag in tag_list:
 
-        query = db.clustertable.find({"tag":ever_tag})
+        query = db.clustertable.find({"tag":every_tag})
         for query_obj in query:
             cluster_dict=query_obj["clusterDict"]
 

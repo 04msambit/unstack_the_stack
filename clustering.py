@@ -32,8 +32,7 @@ def read():
  	 	
  	for row in rows:
  		count+=1
- 		if count==1000:
- 			break
+ 		
  		tempDict={}
  		for term in row['Term_Body']:
  			if term in row['Term_Title']:
