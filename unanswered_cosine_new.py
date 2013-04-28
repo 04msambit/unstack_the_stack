@@ -108,8 +108,10 @@ def read(query_id):
         search_list = search(query_id,merge_dict,query_lst)
 
 
-    	query_question = db.test_dictionary.find() # We will have to chage it to the List of Ids Based on Set of Clustering Ids
+    	#query_question = db.test_dictionary.find() # We will have to chage it to the List of Ids Based on Set of Clustering Ids
     	            
+        query_question= db.test_dictionary.find({"Id":{$in:search_list}})
+
 
         question_count = 0
     	list_for_heap = []

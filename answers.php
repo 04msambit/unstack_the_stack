@@ -1,6 +1,7 @@
-#call python function passing it the unanswered ID echo the results
 <?php
-exec("python unanswered_cosine_new.py 649980",$output);
+$id = $_GET["id"];
+print $id;
+exec("python unanswered_cosine_new.py $id",$output);
 foreach($output as $value) {
   print $value. "<br />";
 }
