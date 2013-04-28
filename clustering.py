@@ -19,11 +19,13 @@ finalClustDict=collections.defaultdict(dict)
 kList=[]
 rssList=[]
 def read():
+ 	global finalClustDict
  	rows = [] #we'll use this array to store all the questions we find in mongodb
  	tagDict={}
  	counter = 0
  	alpha=0.5
  	beta=0.5
+ 	tagList=[]
  	connection = pymongo.Connection("localhost", 27017)
 
  	db = connection['newdata']
@@ -34,12 +36,9 @@ def read():
  	 	
  	for row in rows:
  		count+=1
- 		if count==10:
+ 		if count==1000:
  			break
  		tempDict={}
- 		#print row['Term_Title']
- 		#print row['Term_Body']
- 		#quit()
  		for term in row['Term_Body']:
  			if term in row['Term_Title']:
  				tempDict[term]=alpha*row['Term_Body'][term]+beta*row['Term_Title'][term]
@@ -50,27 +49,43 @@ def read():
  			if not(term in row['Term_Title']):
  				tempDict[term]=row['Term_Title'][term]
  		
- 		print tempDict	
- 		tagList=re.split('>|<',row['Tags'])
-		print tagList
- 		for tag in tagList:
+ 		tags=re.split('>|<',row['Tags'])
+ 		for tag in tags:
+ 			f=0
  			if tag != "" :
+ 				tag=tag.lower()
+ 				if tag == "c" or tag == "c++" or tag == "c#":
+ 					if not(tag in tagList):
+ 						tagList.append(tag)
+ 				else : 
+ 					if "java" in tag:
+ 						tag="java"
+ 					if ".net" in tag or "asp" in tag :
+ 						tag=".net"
+ 					if "sql" in tag :
+ 						tag="mysql"
+ 					if not(tag in tagList):
+ 						tagList.append(tag)
+
+ 				
  				if tag in tagDict:
  					tagDict[tag][row['Id']]=tempDict.copy()
  				else:
  					tagDict[tag]={}
- 					tagDict[tag][row['Id']]=tempDict.copy()
+  					tagDict[tag][row['Id']]=tempDict.copy()
+ 	for tag in tagList:	
+ 		if len(tagDict[tag]) < 100 :
+ 			create_cluster(1,tagDict[tag],len(tagDict[tag]),tag)
+ 		else:
+ 			create_cluster(6,tagDict[tag],len(tagDict[tag]),tag)
+ 	print count
+ 	for tag in finalClustDict:
+ 	 	print tag+" : "
+ 		for id in finalClustDict[tag]: 
+ 			print str(id) +" - "+str(finalClustDict[tag][id][0])
 
- 	#	print "###################"		
- 	#	for t in tagDict:
- 	#		for docId in tagDict[t]:
- 	#			print t+":"+docId
- 		#print len(tempDict)
- 		
- 	create_cluster(1,tagDict["php"],len(tagDict["php"]),"php")
-
-def insert_in_db(finalClustDict):
-
+def insert_in_db():
+ 	global finalClustDict 	
  	connection = pymongo.Connection("localhost", 27017)
  	db = connection['newdata']
  	clustertable = db['clustertable']
@@ -105,7 +120,7 @@ def create_cluster(k,tfDict,N,tag):
  	while True:
  		flag=0
  		count+=1
- 		if count==10:
+ 		if count==100:
  			break
 
  		oldcluster=clustersDict.copy()
@@ -128,7 +143,9 @@ def create_cluster(k,tfDict,N,tag):
  				break
  	
  		if flag ==1:
+ 			#print "clustered"
  			break
+	#print tag
  	for id in clustersDict:
  		finalClustDict[tag][id]=[clustersDict[id]]
  		finalClustDict[tag][id].append(centroid_list[id])
