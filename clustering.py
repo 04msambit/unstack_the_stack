@@ -1,5 +1,3 @@
-#!/usr/bin/python -tt
-""
 import sys
 import random
 import glob
@@ -9,9 +7,7 @@ import json
 import math
 import operator
 import string
-import requests
 import random
-import pylab
 import pymongo
 from time import time ,clock
 
@@ -67,7 +63,7 @@ def read():
  	#			print t+":"+docId
  		#print len(tempDict)
  		
- 	create_cluster(1,tagDict["php"],len(tagDict["php"]),"php")
+ 	#create_cluster(1,tagDict["php"],len(tagDict["php"]),"php")
 
 def insert_in_db(finalClustDict):
 
