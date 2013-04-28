@@ -184,9 +184,7 @@ def tag_similarity_calc(query_tag,question_tag):
 
 
 def cosine_value(query,question,denom_value):
-    #print query
-    #print "q"
-    #print question
+    
     score_doc=0.0
     sum_val = 0.0
     denominator = 0.0   
@@ -211,8 +209,16 @@ def word_preprocessing(word):
  return re.findall(r"[\w]+", word.lower())
 
 def main(argv):
-    ques_id = sys.argv[0]    
-    read(ques_id);
+
+    connection = pymongo.Connection("localhost", 27017)
+
+    db = connection['newdata']
+    collection = db['collection']
+    quer=db.collection.find({"PostTypeId":"1","AnswerCount":"0"})
+    
+    for query_obj in quer:
+        ques_id=query_obj["Id"] 
+        read(ques_id);
        
 if __name__ == '__main__':
   main(sys.argv[1:])
