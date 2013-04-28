@@ -210,8 +210,9 @@ def cosine_value(query,question,denom_value):
 def word_preprocessing(word):
  return re.findall(r"[\w]+", word.lower())
 
-def main():    
-    read("649980");
+def main(argv):
+    ques_id = sys.argv[0]    
+    read(ques_id);
        
 if __name__ == '__main__':
-  main()
+  main(sys.argv[1:])
