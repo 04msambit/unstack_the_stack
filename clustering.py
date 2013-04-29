@@ -1,3 +1,4 @@
+from sklearn.cluster import KMeans
 import sys
 import random
 import glob
@@ -9,7 +10,6 @@ import operator
 import string
 import random
 import pymongo
-from sklearn.cluster import KMeans
 from time import time ,clock
 
 finalClustDict=collections.defaultdict(dict)
@@ -70,19 +70,21 @@ def read():
  					tagDict[tag]={}
   					tagDict[tag][row['Id']]=tempDict.copy()
  	print "final: "+str(count)
-	km = KMeans(n_clusters=true_k, init='k-means++', max_iter=100, n_init=1,verbose=1)
+	km = KMeans(n_clusters=8, init='k-means++', max_iter=100, n_init=1,verbose=1)
  	for tag in tagList:	
  		if len(tagDict[tag]) < 100 :
  			print "cluster 1"
-			km.fit(X)
+		        km.fit(tagDict[tag])
  		else:
  			print "cluster 6"
- 			km.fit(X)
- 	#for tag in finalClustDict:
- 	 #	print tag+" : "
- 	#	for id in finalClustDict[tag]: 
- 	#		print str(id) +" - "+str(finalClustDict[tag][id][0])
- 	#insert_in_db()
+			km.fit(tagDict[tag])
+
+
+ 	for tag in finalClustDict:
+ 	 	print tag+" : "
+ 		for id in finalClustDict[tag]: 
+ 			print str(id) +" - "+str(finalClustDict[tag][id][0])
+ 	insert_in_db()
 
  	#	print "###################"		
  	#	for t in tagDict:
@@ -100,7 +102,6 @@ def insert_in_db():
  	for tag in finalClustDict:
  		print tag
  		db.clustertable.insert({ "tag":tag ,"clusterDict" : finalClustDict[tag]})
-
 
 
 def calcNewCentroid(clustDict,tfDict):
@@ -131,6 +132,28 @@ def calcVectorSum(vec1,vec2,l):
  			vec3[term]=vec2[term]/float(l)
  	return vec3
 
+def min(valList):
+ 	min=valList[0]
+ 	index=0
+ 	for i in range(len(valList)):
+ 		if valList[i]<=min:
+ 			min=valList[i]
+ 			index=i
+
+ 	return str(index)
+def calcEuclidean(vec1,vec2):
+ 	diff=0.0
+ 	for term in vec1:
+ 		if term in vec2:
+ 			diff=diff+(vec1[term]-vec2[term])*(vec1[term]-vec2[term])
+ 		else:
+ 			diff=diff+vec1[term]*vec1[term]
+
+ 	for term in vec2:
+ 		if not(term in vec1):
+ 			diff=diff+vec2[term]*vec2[term]
+ 
+ 	return math.sqrt(diff)
 
 def main():
 

@@ -105,7 +105,7 @@ def read(query_id):
 
 
 
-        tagList=[]
+        '''tagList=[]
         query_lst=re.split('>|<',query_tags)
  	for tag in query_lst:
  		if tag != "" :
@@ -121,7 +121,7 @@ def read(query_id):
  					if "sql" in tag :
  						tag="mysql"
  					if not(tag in tagList):
- 						tagList.append(tag)
+ 						tagList.append(tag)'''
 
         search_list = search(query_id,merge_dict,tagList)
 
