@@ -103,10 +103,28 @@ def read(query_id):
             if kk not in merge_dict:
                   merge_dict[kk]= float( 1.0 * query_title[kk] )
 
-        
-        query_lst=re.split('>|<',query_tags)	
-        search_list = search(query_id,merge_dict,query_lst)
-	
+
+
+        tagList=[]
+        query_lst=re.split('>|<',query_tags)
+ 	for tag in query_lst:
+ 		if tag != "" :
+        		tag=tag.lower()
+ 			if tag == "c" or tag == "c++" or tag == "c#":
+ 				if not(tag in tagList):
+ 					tagList.append(tag)
+ 				else :
+ 					if "java" in tag:
+						 tag="java"
+ 					if ".net" in tag or "asp" in tag :
+ 						tag=".net"
+ 					if "sql" in tag :
+ 						tag="mysql"
+ 					if not(tag in tagList):
+ 						tagList.append(tag)
+
+        search_list = search(query_id,merge_dict,tagList)
+
 
     	#query_question = db.test_dictionary.find() # We will have to chage it to the List of Ids Based on Set of Clustering Ids
     	            
