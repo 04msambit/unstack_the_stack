@@ -1,4 +1,5 @@
 import pymongo
+import sys
 def search(query):
     
     obj={}
@@ -6,27 +7,33 @@ def search(query):
     db = connection['newdata']
     collection = db['collection'] 
 
-    regex_string = '/\.*' + query + '\.*/'
-    print regex_string
-    query = db.collection.find({"$and" : [ { "Title" : regex_string } ,{ "PostTypeId" : "1"}, { "AnswerCount" : "0"}] })
-    #query = db.collection.find({"Title":regex_string})    
-    print query
+    query = db.collection.find({"$and":[{"Title": {"$regex": query}},{ 'PostTypeId' : '1'}, { 'AnswerCount' : '0'}] })
+
+    #query = db.collection.find({"Title": { "$regex": regex_string}})    
+    #query = db.collection.find({'Title': {'$regex': regex_string}})
+    #query = db.collection.find({'Title': {'$regex': query}})
     ctr = 0
+    counter=0
     for data in query:
-        print ctr
-	ctr+=1
+        post_id = data['PostTypeId']
+        answer_count = data['AnswerCount']
+        if ( ctr > 10):
+           break        
+        
+       	ctr+=1
 	title = data['Title']
         Id = data['Id']
         obj = {}
         obj['Id'] = Id
         obj['Title'] = title
+        
         print obj
     
 
-def main():    
+def main(argv):    
    
-    query = 'C'
+    query = sys.argv[1]
     search(query);
        
 if __name__ == '__main__':
-  main()
+  main(sys.argv[1:])
