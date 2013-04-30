@@ -329,10 +329,10 @@ def word_preprocessing(word):
 
 def main(argv):
 
-    ques_id = sys.argv[1]    
-    read(ques_id);
+    '''ques_id = sys.argv[1]    
+    read(ques_id);'''
 
-    '''connection = pymongo.Connection("localhost", 27017)
+    connection = pymongo.Connection("localhost", 27017)
 
     db = connection['newdata']
     collection = db['collection']
@@ -340,7 +340,7 @@ def main(argv):
     
     for query_obj in quer:
         ques_id=query_obj["Id"] 
-        read(ques_id); '''
+        read(ques_id);
 
        
 if __name__ == '__main__':
