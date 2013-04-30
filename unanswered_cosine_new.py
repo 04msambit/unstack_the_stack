@@ -181,17 +181,22 @@ def read(query_id):
 
 
     	for element in list_for_heap:
+		print "query id",
+		print query_id
+		print "val",
+		print id_value
         	id_value=element["id"] 
-                id_value.encode("ascii")
-        # Forming a Cache List which will be pushed into Dictionary 
-        	cache_list.append(id_value)
-     
-        	db_result = db.collection.find({"Id":id_value})
-        	for result_obj in db_result:
-            		obj = {}
-			obj['Id'] = result_obj["Id"]
-			obj['Title'] = result_obj["Title"]
-  			print obj
+		if id_value != query_id:
+		        id_value.encode("ascii")
+		# Forming a Cache List which will be pushed into Dictionary 
+			cache_list.append(id_value)
+	     
+			db_result = db.collection.find({"Id":id_value})
+			for result_obj in db_result:
+		    		obj = {}
+				obj['Id'] = result_obj["Id"]
+				obj['Title'] = result_obj["Title"]
+	  			print obj
                 
         db.result_cache.insert({"Unanswered_Question_Id":query_id , "Answered_Question_List":cache_list})
 
@@ -211,13 +216,13 @@ def read(query_id):
         for id_result in result_list:
             db_result = db.collection.find({"Id":id_result})
             for result_obj in db_result:
-		obj = {}
-		obj['Id'] = result_obj["Id"]
-		obj['Title'] = result_obj["Title"]
-  
-                print obj
-                #print'\n'  
-       
+		if(result_obj['Id']!=query_id):		
+			obj = {}
+			obj['Id'] = result_obj["Id"]
+			obj['Title'] = result_obj["Title"]
+	  
+		        print obj
+                
          
     return
 
