@@ -9,15 +9,13 @@ def search(query):
 
     query = db.collection.find({"$and":[{"Title": {"$regex": query}},{ 'PostTypeId' : '1'}, { 'AnswerCount' : '0'}] })
 
-    #query = db.collection.find({"Title": { "$regex": regex_string}})    
-    #query = db.collection.find({'Title': {'$regex': regex_string}})
-    #query = db.collection.find({'Title': {'$regex': query}})
+    
     ctr = 0
     counter=0
     for data in query:
         post_id = data['PostTypeId']
         answer_count = data['AnswerCount']
-        if ( ctr > 10):
+        if ( ctr > 15):
            break        
         
        	ctr+=1
