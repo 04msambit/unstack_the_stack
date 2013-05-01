@@ -44,7 +44,7 @@ def read():
           
     for test in questions:
      counter+=1
-     if(counter < 100000):  
+     if(counter < 10000):  
 	if test['PostTypeId'] == '1':
 				
                 rowId = test['Id']
